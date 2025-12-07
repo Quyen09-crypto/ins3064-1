@@ -8,9 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_author'])) {
     if ($name !== "") {
         $stmt = mysqli_prepare($link, "INSERT INTO authors (name) VALUES (?)");
         mysqli_stmt_bind_param($stmt, "s", $name);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-        $msg = "Author added.";
+        if (!mysqli_stmt_execute($stmt)) {
+    $msg = "Insert failed.";
+} else {
+    $msg = "Author added.";
+}
+mysqli_stmt_close($stmt);
+
     }
 }
 $authors = mysqli_query($link, "SELECT * FROM authors ORDER BY name");
